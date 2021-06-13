@@ -3,6 +3,7 @@ const Payments= require('../models/paymentModel')
  
 const bcrypt= require('bcrypt')
 const jwt= require('jsonwebtoken')
+const { json } = require('express')
 
 //access token contains the security credentials for a login section and
 //identifies the user!
@@ -53,18 +54,19 @@ const userCtrl= {
     },
     login: async(req, res)=>{
         try{
-        //method: POST
+        //method: GET
         //compare password req from body to user.password in db
         //create token and save to cookie
             const {email, password} = req.body;
-            const user= Users.findOne({email})
+            const user= await Users.findOne({email}) // fuckkkkkkkk!!!! 
             if(!user) return res.status(400).json({msg: "Incorrect email."})
         
-            const isMatch= bcrypt.compare(password, user.password)
+            const isMatch= await bcrypt.compare(password, user.password)
             if(!isMatch) return res.status(400).json({msg: "Incorrect password1"})
-
+            // If login success , create access token and refresh token
             const accesstoken= createAccessToken({id: user._id})
             const refreshtoken= createRefreshToken({id: user._id})
+
             res.cookie("refreshtoken", refreshtoken,{
                 httpOnly: true, 
                 path: '/user/refresh_token',
@@ -72,19 +74,33 @@ const userCtrl= {
             })
             
             res.json({accesstoken, refreshtoken, msg: "logged in"})
+            
         } catch(err){
             if(err) return res.status(500).json({msg: err.message})
         }
     },
     logout: async(req, res)=>{
         try{
-
+        //method: GET
+        //user clearCookie method and change direct to refresh_token
+        res.clearCookie('refreshtoken', {path: 'user/refresh_token'})
+        res.json({msg: "Logged out!"})
         } catch(err){
             if(err) return res.status(500).json({msg: err.message})
         }
     },
-    refreshToken: async(req, res)=>{
+    refreshToken: (req, res)=>{
         try{
+        //method: POST
+        //request refreshtoken from cookies.refreshtoken, verify to check user
+        // and then create new accesstoken 
+        const rf_token= req.cookie.refreshToken;
+        if(!rf_token) return res.status(400).json({msg: "Please register or login"})
+        jwt.verify(rf_token, process.env.REFRESH_TOKEN_SECRET, (err, user)=>{
+            if(err) return res.status(400).json({msg: "Invalid Authentication"})
+            const refreshtoken= createRefreshToken(user.id, process.env.REFRESH_TOKEN_SECRET)
+            res.json({accesstoken})
+        })
 
         } catch(err){
             if(err) return res.status(500).json({msg: err.message})
@@ -92,6 +108,12 @@ const userCtrl= {
     },
     getUser: async(req, res)=>{
         try{
+            //method: GET
+        //get user from db(.select("-password") by user.id
+        
+        const user= await Users.findById(req.user.id).select("-password");
+        if(!user) return res.status(400).json({msg: "User does not exist."})
+        res.json({user})
 
         } catch(err){
             if(err) return res.status(500).json({msg: err.message})
