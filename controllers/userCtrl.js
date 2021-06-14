@@ -10,7 +10,7 @@ const { json } = require('express')
 
 // create 2 functions to create access token and auto refresh it
 const createAccessToken= (user)=>{
-    return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '9m'})
+    return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '59m'})
 }
 const createRefreshToken= (user)=>{
     return jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, {expiresIn: '7d'})
@@ -62,7 +62,7 @@ const userCtrl= {
             if(!user) return res.status(400).json({msg: "Incorrect email."})
         
             const isMatch= await bcrypt.compare(password, user.password)
-            if(!isMatch) return res.status(400).json({msg: "Incorrect password1"})
+            if(!isMatch) return res.status(400).json({msg: "Incorrect password!"})
             // If login success , create access token and refresh token
             const accesstoken= createAccessToken({id: user._id})
             const refreshtoken= createRefreshToken({id: user._id})
@@ -121,13 +121,26 @@ const userCtrl= {
     },
     history: async(req, res)=>{
         try{
-
+            //Method: GET
+            //fetching payment history using req.user.id
+            const history= await Payments.find({user_id: req.user.id})
+            if(!history) return res.status(400).json({msg: "There is no payment"})
+            res.json(history)
         } catch(err){
             if(err) return res.status(500).json({msg: err.message})
         }
     },
     addCart: async(req, res)=>{
         try{
+            //Method: GET
+            //find by req.user.id and update req.user.cart
+            const user= await Users.findByIdAndUpdate({
+                _id: req.user.id},{
+                    cart: req.user.cart
+                }
+            );
+            if(!user) return res.status(400).json({msg: "User does not exists."})
+            res.json({msg: "Added to cart."})
 
         } catch(err){
             if(err) return res.status(500).json({msg: err.message})
