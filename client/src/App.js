@@ -1,10 +1,18 @@
+import React from 'react'
+import {BrowserRouter as Router} from 'react-router-dom'
+import Header from './components/headers/Header'
+import MainPages from './components/mainpages/Pages'
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      Hello mother fucker
-    </div>
-  );
+    <Router>
+      <div className="App">
+        <Header/>
+        <hr />
+        <MainPages />
+      </div>
+    </Router>
+  )
 }
 
-export default App;
+export default App
