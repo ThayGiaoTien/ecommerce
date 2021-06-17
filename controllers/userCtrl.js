@@ -10,7 +10,7 @@ const { json } = require('express')
 
 // create 2 functions to create access token and auto refresh it
 const createAccessToken= (user)=>{
-    return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '59m'})
+    return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '9m'})
 }
 const createRefreshToken= (user)=>{
     return jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, {expiresIn: '7d'})
@@ -43,7 +43,7 @@ const userCtrl= {
             res.cookie("refreshtoken", refreshtoken,{
                 httpOnly: true, 
                 path: '/user/refresh_token',
-                maxAge:7*24*60*60*100 //7d
+                maxAge:7*24*60*60*1000 //7d
             })
             
             
@@ -54,7 +54,7 @@ const userCtrl= {
     },
     login: async(req, res)=>{
         try{
-        //method: GET
+        //method: POST
         //compare password req from body to user.password in db
         //create token and save to cookie
             const {email, password} = req.body;
@@ -70,7 +70,7 @@ const userCtrl= {
             res.cookie("refreshtoken", refreshtoken,{
                 httpOnly: true, 
                 path: '/user/refresh_token',
-                maxAge:7*24*60*60*100 //7d
+                maxAge:7*24*60*60*1000 //7d
             })
             
             res.json({accesstoken, refreshtoken, msg: "logged in"})
@@ -82,7 +82,7 @@ const userCtrl= {
     logout: async(req, res)=>{
         try{
         //method: GET
-        //user clearCookie method and change direct to refresh_token
+        //user clearCookie 
         res.clearCookie('refreshtoken', {path: 'user/refresh_token'})
         res.json({msg: "Logged out!"})
         } catch(err){
@@ -91,14 +91,14 @@ const userCtrl= {
     },
     refreshToken: (req, res)=>{
         try{
-        //method: POST
+        //method: GET
         //request refreshtoken from cookies.refreshtoken, verify to check user
         // and then create new accesstoken 
-        const rf_token= req.cookie.refreshToken;
+        const rf_token= req.cookies.refreshtoken;
         if(!rf_token) return res.status(400).json({msg: "Please register or login"})
         jwt.verify(rf_token, process.env.REFRESH_TOKEN_SECRET, (err, user)=>{
             if(err) return res.status(400).json({msg: "Invalid Authentication"})
-            const refreshtoken= createRefreshToken(user.id, process.env.REFRESH_TOKEN_SECRET)
+            const accesstoken= createAccessToken({id: user.id})
             res.json({accesstoken})
         })
 
@@ -132,7 +132,7 @@ const userCtrl= {
     },
     addCart: async(req, res)=>{
         try{
-            //Method: GET
+            //Method: PATCH
             //find by req.user.id and update req.user.cart
             const user= await Users.findByIdAndUpdate({
                 _id: req.user.id},{

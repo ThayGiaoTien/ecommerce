@@ -43,7 +43,7 @@ function DetailProduct() {                      //Function not const
             </div>
             <div>
                 <h2>Related Products</h2>
-                <div className="related_products">
+                <div className="products">
                     {
                         products.map(product=>{
                             return (

@@ -19,7 +19,8 @@ const Page = () => {
             <Route path="/" exact component={Products} />
             <Route path="/detail/:id" exact component={DetailProduct} />
 
-            <Route path="/login" exact component={NotFound} />
+            <Route path="/login" exact component={Login} />
+            <Route path='/register' exact component={Register} />
             <Route path="/cart" exact component={Cart} />
             <Route path="/category" exact component={Categories} />
             <Route path="/history" exact component={History} />

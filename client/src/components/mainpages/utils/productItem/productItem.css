@@ -24,9 +24,7 @@
     text-transform: capitalize;
     cursor: pointer;
     color: #323232;
-    
-    padding: 19px;
-    margin-bottom: 29px;
+    padding: 9px;
 }
 .product_card span{
     color: crimson;
