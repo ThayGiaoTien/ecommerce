@@ -133,14 +133,15 @@ const userCtrl= {
     addCart: async(req, res)=>{
         try{
             //Method: PATCH
-            //find by req.user.id and update req.user.cart
-            const user= await Users.findByIdAndUpdate({
-                _id: req.user.id},{
-                    cart: req.user.cart
-                }
-            );
-            if(!user) return res.status(400).json({msg: "User does not exists."})
-            res.json({msg: "Added to cart."})
+            //findOneAndUpdate
+            const user = await Users.findById(req.user.id)
+            if(!user) return res.status(400).json({msg: "User does not exist."})
+
+            await Users.findOneAndUpdate({_id: req.user.id}, {
+                cart: req.body.cart
+            })
+
+            return res.json({msg: "Added to cart"})
 
         } catch(err){
             if(err) return res.status(500).json({msg: err.message})

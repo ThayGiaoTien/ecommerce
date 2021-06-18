@@ -4,17 +4,28 @@ import { GlobalState } from "../../../../GlobalState";
 
 function BtnRender({product}){
     const state= useContext(GlobalState)
+    const addCart= state.userAPI.addCart
+    const [isAdmin]= state.userAPI.isAdmin
+
     
     return (
         <div className="row_btn">
-            <>
-                <Link id="btn_buy" to ="#!" >
-                    Buy
-                </Link>
-                <Link id="btn_view" to={`/detail/${product._id}`}>
-                    View
-                </Link>
-            </>
+            { isAdmin? 
+                <>
+                    This feature still no complete!
+                </>
+            :
+                <>
+                    <Link id="btn_buy" to ="#!" 
+                    onClick={()=>addCart(product)}>
+                        Buy
+                    </Link>
+                    <Link id="btn_view" to={`/detail/${product._id}`}>
+                        View
+                    </Link>
+                </>
+            }
+            
         </div>
     )
 }

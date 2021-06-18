@@ -6,7 +6,7 @@ import ProductItem from "../utils/productItem/ProductItem"
 const Products = () => {
     const state= useContext(GlobalState)
     const [products]= state.productsAPI.products //each child in list should have a unique {key}
-    console.log(products)
+    
 
     return (
         <div className= "products">
