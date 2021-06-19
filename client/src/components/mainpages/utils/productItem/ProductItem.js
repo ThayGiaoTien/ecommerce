@@ -3,7 +3,7 @@ import BtnRender from "./BtnRender"
 
 const ProductItem = ({product, deleteProduct, isAdmin, handleCheck}) => {
     return (
-        <div className="product_card">
+        <div className="product_card">  
             {
                 isAdmin && <input type='checkbox' checked={product.checked}
                 onChange={()=>handleCheck(product._id)} />
