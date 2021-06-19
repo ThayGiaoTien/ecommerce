@@ -1,6 +1,6 @@
 
-
-import React from 'react'
+import React, {useContext} from 'react'
+import { GlobalState } from '../../GlobalState'
 import { Switch, Route } from 'react-router-dom'
 import Products from './products/Products'
 import DetailProduct from './detailProduct/DetailProduct'
@@ -13,7 +13,12 @@ import NotFound from './utils/not_found/NotFound'
 import Categories from './categories/Categories'
 import CreateProduct from './createProduct/CreateProduct'
 
+
 const Page = () => {
+    const state= useContext(GlobalState)
+    const [isAdmin]=state.userAPI.isAdmin
+    const [isLogged]= state.userAPI.isLogged
+
     return (
         <Switch>
             <Route path="/" exact component={Products} />
@@ -24,7 +29,8 @@ const Page = () => {
             <Route path="/cart" exact component={Cart} />
             <Route path="/category" exact component={Categories} />
             <Route path="/history" exact component={History} />
-            <Route path='/create_product' exact component={CreateProduct} />
+            <Route path='/create_product' exact component={isAdmin?CreateProduct: NotFound} />
+            <Route path='/edit_product/:id' exact component={isAdmin? CreateProduct:NotFound} />
 
         </Switch>
     )

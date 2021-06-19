@@ -104,7 +104,7 @@ const CreatProduct = () => {
             if(!isAdmin) return alert("You are not an admin!")
             if(!images) return alert("No images upload")
             if(onEdit){
-                await axios.post(`/api/products/${product._id}`, {...product, images},
+                await axios.put(`/api/products/${product._id}`, {...product, images},
                 {headers:{Authorization: token}})
             } else{
                 await axios.post('/api/products', {...product, images}, {
@@ -144,26 +144,27 @@ const CreatProduct = () => {
                 <div className='row'>
                     <label htmlFor='title'>Title</label>
                     <input type='text' name='title' id='title' required
-                    value={product.title} onChange={handleChangeInput} disabled= {onEdit}/>
+                    value={product.title} onChange={handleChangeInput} />
                 </div>
                 <div className='row'>
                     <label htmlFor='price'>Price</label>
                     <input type='number' name='price' id='price' required
-                    value={product.price} onChange={handleChangeInput} disabled= {onEdit}/>
+                    value={product.price} onChange={handleChangeInput} />
                 </div>
                 <div className='row'>
                     <label htmlFor='description'>Description</label>
                     <input type='text' name='description' id='description' required
-                    value={product.description} onChange={handleChangeInput} disabled= {onEdit}/>
+                    value={product.description} onChange={handleChangeInput}/>
                 </div>
                 <div className='row'>
                     <label htmlFor='content'>Content</label>
                     <input type='text' name='content' id='content' required
-                    value={product.content} onChange={handleChangeInput} disabled= {onEdit}/>
+                    value={product.content} onChange={handleChangeInput} />
                 </div>
                 <div className='row'>
                     <label htmlFor='categories' >Catagories: </label>
-                    <select name='category' value={product.category} onChange={handleChangeInput}>
+                    <select name='category' value={product.category} onChange={handleChangeInput}
+                    >
                         <option value=''>Please select a category</option>
                         {
                             categories.map(category=>(

@@ -35,7 +35,7 @@ const productSchema= mongoose.Schema({
         type: String, 
         required: true
     },
-    checked:{
+    checked:{                   //use when edit or delete products
         type: Boolean,
         default: false
     },
