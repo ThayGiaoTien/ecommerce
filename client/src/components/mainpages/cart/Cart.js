@@ -60,8 +60,13 @@ const Cart = () => {
             addToCart(cart)
         }
     }
-    const tranSuccess= ()=>{
-
+    const tranSuccess= async(payment)=>{
+        const {paymentId, address}= payment;
+        await axios.post('/api/payment', {cart, paymentId , address},
+        {headers:{Authorization: token}})
+        setCart([])
+        addToCart([])
+        alert("You have been successfully placed an order! ")
     }
     
     return (
@@ -92,6 +97,9 @@ const Cart = () => {
             }
             <div className='total'>
                 <h3>Total: $ {total}</h3>
+                <PaypalButton
+                total={total}
+                />
             </div>
         </div>
     )

@@ -33,9 +33,9 @@ const categoryCtrl={
         try{
             //Method: PUT
             const {name}= req.body;
-            const thisCategory= await Category.findByIdAndUpdate({
+            const thisCategory= await Category.findOneAndUpdate({
                 _id: req.params.id},{
-                    name: {name}
+                    name                                            //just name
             });
             res.json({msg: "Everything up to date!"})
 

@@ -1,15 +1,10 @@
 import {useState, useEffect} from 'react'
 import axios from 'axios'
 
-//Create a function named ProductsAPI
-//create a state 
-//create a function named getProducts to response products from database using axios
-//call it in useEffect()
-//return results
 
 function ProductsAPI(){
     const [products, setProducts]= useState([])
-    
+    const [callback, setCallback]= useState(false)
     const getProducts= async()=>{
         const res= await axios.get('/api/products')
         
@@ -17,10 +12,11 @@ function ProductsAPI(){
     }
     useEffect(()=>{
         getProducts()
-    },[])
+    },[callback])
 
     return {
-        products: [products, setProducts]
+        products: [products, setProducts], 
+        callback: [callback,setCallback]
     }
 }
 

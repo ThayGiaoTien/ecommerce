@@ -33,7 +33,7 @@ const productSchema= mongoose.Schema({
     },
     category:{
         type: String, 
-        unique: true
+        required: true
     },
     checked:{
         type: Boolean,

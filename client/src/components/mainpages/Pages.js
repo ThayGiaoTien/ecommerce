@@ -24,6 +24,7 @@ const Page = () => {
             <Route path="/cart" exact component={Cart} />
             <Route path="/category" exact component={Categories} />
             <Route path="/history" exact component={History} />
+            <Route path='/create_product' exact component={CreateProduct} />
 
         </Switch>
     )

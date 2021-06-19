@@ -9,6 +9,6 @@ router.route('/category')
 
 router.route('/category/:id')
     .delete(auth, authAdmin, categoryCtrl.deleteCategory)
-    .patch(auth, authAdmin, categoryCtrl.updateCategory)
+    .put(auth, authAdmin, categoryCtrl.updateCategory)
 
 module.exports= router;
